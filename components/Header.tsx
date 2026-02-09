@@ -12,8 +12,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ currentView, setView, lang, setLang, isDarkMode, setIsDarkMode }) => {
-  const [showLangMenu, setShowLangMenu] = useState(false);
-
   const navLinks = [
     { label: 'Open Source', view: AppView.OPEN_SOURCE },
     { label: 'Blog', view: AppView.BLOG },
@@ -27,7 +25,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, setView, lang, setLang, is
       <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3 cursor-pointer group" onClick={() => setView(AppView.LANDING)}>
-          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20 group-hover:scale-105 transition-transform text-2xl">
             <span className="material-icons-round">code</span>
           </div>
           <span className="text-xl font-black tracking-tight dark:text-white hidden sm:block">
@@ -81,7 +79,7 @@ const Header: React.FC<HeaderProps> = ({ currentView, setView, lang, setLang, is
           </div>
         </div>
 
-        {/* Action Button - Changed from Contato to Login */}
+        {/* Botão de Login substituindo o antigo botão azul de contato */}
         <button
           onClick={() => setView(AppView.LOGIN_CLIENT)}
           className="bg-primary text-white px-8 py-2.5 rounded-xl font-black text-[11px] uppercase tracking-widest shadow-xl shadow-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center gap-2"

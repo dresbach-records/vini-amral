@@ -2,9 +2,12 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Message } from "../types";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Função helper para inicializar a IA apenas quando necessário
+const getAI = () => {
+  const apiKey = process.env.API_KEY || "";
+  return new GoogleGenAI({ apiKey });
+};
 
-// Fix: Ensure getAIResponse uses correct SDK parameters and models
 export const getAIResponse = async (context: 'faq' | 'technical' | 'admin', prompt: string) => {
   const model = context === 'admin' ? 'gemini-3-pro-preview' : 'gemini-3-flash-preview';
   
@@ -15,6 +18,7 @@ export const getAIResponse = async (context: 'faq' | 'technical' | 'admin', prom
   };
 
   try {
+    const ai = getAI();
     const response = await ai.models.generateContent({
       model: model,
       contents: [{ role: 'user', parts: [{ text: prompt }] }],
@@ -30,11 +34,6 @@ export const getAIResponse = async (context: 'faq' | 'technical' | 'admin', prom
   }
 };
 
-// Fix: Added missing generateTechnicalResponse function to handle conversational state in DiscoveryView
-/**
- * Generates a technical response based on a prompt and conversation history.
- * Correctly maps 'assistant' role to 'model' for the Gemini API.
- */
 export const generateTechnicalResponse = async (prompt: string, history: Message[]) => {
   const model = 'gemini-3-flash-preview';
   
@@ -43,13 +42,13 @@ export const generateTechnicalResponse = async (prompt: string, history: Message
     parts: [{ text: msg.content }]
   }));
 
-  // Append current prompt as the last user turn
   contents.push({
     role: 'user',
     parts: [{ text: prompt }]
   });
 
   try {
+    const ai = getAI();
     const response = await ai.models.generateContent({
       model: model,
       contents: contents,
@@ -65,9 +64,9 @@ export const generateTechnicalResponse = async (prompt: string, history: Message
   }
 };
 
-// Fix: Implement generateProjectDoc using structured JSON responseSchema
 export const generateProjectDoc = async (projectData: any) => {
   try {
+    const ai = getAI();
     const response = await ai.models.generateContent({
       model: 'gemini-3-pro-preview',
       contents: [{ role: 'user', parts: [{ text: `Gere um escopo técnico para o projeto: ${JSON.stringify(projectData)}` }] }],
